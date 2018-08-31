@@ -1,0 +1,16 @@
+{
+    "name": "jakubkulhan/js2php",
+    "description": "js2php",
+    "authors": [
+        {
+            "name": "Jakub Kulhan",
+            "email": "jakub.kulhan@gmail.com"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "src/build/JSInterpreter.php",
+            "src/build/image.php"
+        ]
+    }
+}
