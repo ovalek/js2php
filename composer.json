@@ -9,8 +9,8 @@
     ],
     "autoload": {
         "files": [
-            "src/build/JSInterpreter.php",
-            "src/build/image.php"
+            "build/JSInterpreter.php",
+            "build/image.php"
         ]
     }
 }
