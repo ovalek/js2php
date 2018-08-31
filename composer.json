@@ -8,9 +8,6 @@
         }
     ],
     "autoload": {
-        "files": [
-            "build/JSInterpreter.php",
-            "build/image.php"
-        ]
+        "classmap": ["build/image.php"]
     }
 }
