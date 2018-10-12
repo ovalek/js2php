@@ -8,6 +8,6 @@
         }
     ],
     "autoload": {
-        "classmap": ["build/image.php"]
+        "classmap": ["build/image_lite.php"]
     }
 }
