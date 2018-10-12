@@ -53,7 +53,7 @@ task("build:image", "build image.php from src/image/*.js; argument <loader>, ima
 				"require_once " + PHP.fn("var_export")(utilDir + "/shrink.php", true) + ";\n" +
 				"$global = (object) array('properties' => array(), 'attributes' => array(), " +
 				"'getters' => array(), 'setters' => array(), 'prototype' => NULL, 'up' => NULL, " +
-				"'trace' => array());\n" +
+				"'trace' => array(), 'trace_sp' => 0, 'scope_sp' => 0);\n" +
 				"$lines = explode(\"\\n\", file_get_contents(__FILE__));\n" +
 				"echo \"<?php\\n\";\n",
 			mains = "";
