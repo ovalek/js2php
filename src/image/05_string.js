@@ -47,7 +47,7 @@ String.prototype.charAt = function (pos) {
 		return "";
 	}
 
-	return @@ (string) substr($leThis->value, `pos, 1) @@;
+	return @@ (string) mb_substr($leThis->value, `pos, 1) @@;
 };
 
 String.prototype.charCodeAt = function (pos) {
@@ -77,8 +77,8 @@ String.prototype.indexOf = function (search, position) {
 		position = 0;
 	}
 
-	var offset = Math.min(Math.max(position, 0), @@ strlen($leThis->value) @@),
-		ret = @@ strpos($leThis->value, JS::toString(`search, $global), `offset) @@;
+	var offset = Math.min(Math.max(position, 0), @@ mb_strlen($leThis->value) @@),
+		ret = @@ mb_strpos($leThis->value, JS::toString(`search, $global), `offset) @@;
 
 	if (ret === false) {
 		return -1;
@@ -92,8 +92,8 @@ String.prototype.lastIndexOf = function (search, position) {
 		position = 0;
 	}
 
-	var offset = Math.min(Math.max(position, 0), @@ strlen($leThis->value) @@),
-		ret = @@ strrpos($leThis->value, JS::toString(`search, $global), `offset) @@;
+	var offset = Math.min(Math.max(position, 0), @@ mb_strlen($leThis->value) @@),
+		ret = @@ mb_strrpos($leThis->value, JS::toString(`search, $global), `offset) @@;
 	
 	if (ret === false) {
 		return -1;
@@ -204,7 +204,7 @@ String.prototype.search = function (search) {
 };
 
 String.prototype.slice = function (start, end) {
-	var length = @@ strlen($leThis->value) @@;
+	var length = @@ mb_strlen($leThis->value) @@;
 
 	if (start === undefined) {
 		start = 0;
@@ -222,7 +222,7 @@ String.prototype.slice = function (start, end) {
 		end = Math.max(end + length, 0);
 	}
 
-	return @@ (string) substr($leThis->value, `start, max(`end - `start, 0)) @@;
+	return @@ (string) mb_substr($leThis->value, `start, max(`end - `start, 0)) @@;
 };
 
 String.prototype.split = function (separator, limit) {
@@ -234,7 +234,7 @@ String.prototype.split = function (separator, limit) {
 		var returnArray = [];
 
 		for (var i = 0, l = this.length; i < l; ++i) {
-			returnArray.push(@@ (string) substr($leThis->value, `i, 1) @@);
+			returnArray.push(@@ (string) mb_substr($leThis->value, `i, 1) @@);
 		}
 
 		return returnArray;
@@ -281,7 +281,7 @@ String.prototype.split = function (separator, limit) {
 };
 
 String.prototype.substring = function (start, end) {
-	var length = @@ strlen($leThis->value) @@;
+	var length = @@ mb_strlen($leThis->value) @@;
 
 	if (start === undefined) {
 		start = 0;
@@ -304,26 +304,26 @@ String.prototype.substring = function (start, end) {
 
 	var from = Math.min(start, end), to = Math.max(start, end);
 
-	return @@ (string) substr($leThis->value, `from, `to - `from) @@;
+	return @@ (string) mb_substr($leThis->value, `from, `to - `from) @@;
 };
 
 // non-standard
 String.prototype.substr = function (start, length) {
 	if (length === undefined) {
-		return @@ substr($leThis->value, `start) @@;
+		return @@ mb_substr($leThis->value, `start) @@;
 	}
 
-	return @@ (string) substr($leThis->value, `start, `length) @@;
+	return @@ (string) mb_substr($leThis->value, `start, `length) @@;
 };
 
 String.prototype.toLowerCase = function () {
-	return @@ strtolower($leThis->value) @@;
+	return @@ mb_strtolower($leThis->value) @@;
 };
 
 String.prototype.toLocaleLowerCase = String.prototype.toLowerCase;
 
 String.prototype.toUpperCase = function () {
-	return @@ strtoupper($leThis->value) @@;
+	return @@ mb_strtoupper($leThis->value) @@;
 };
 
 String.prototype.toLocaleUpperCase = String.prototype.toUpperCase;
