@@ -1,4 +1,4 @@
-function _9273b0ff6f7baa815f4ec0ba04dfeffe_0($global = NULL, $scope = NULL) {
+function _75477e6bbd44ef5057780a6cb57f68d6_0($global = NULL, $scope = NULL) {
 if (!is_object($global)) {$global = (object) array('properties' => array(),'attributes' => array(),'getters' => array(),'setters' => array(),'prototype' => NULL,'up' => NULL,);$set_scope = TRUE;$global->trace = array(array('<image>/00_prologue.js', NULL, NULL)); $global->trace_sp = 0;}
 if ($scope === NULL) {$scope = (object) array('properties' => array(), 'attributes' => array(), 'up' => $global);$scope->properties['global'] = $global;$scope->properties['__filename'] = '<image>/00_prologue.js';$scope->properties['__dirname'] = '<image>';}
 if (isset($global->properties['require'])) {$global->properties['require']->properties['.'] = '<image>';$global->properties['require']->attributes['.'] = 0;}
@@ -244,7 +244,16 @@ class JS
 		} else if ($native instanceof JSUndefined) {
 			return JS::$undefined;
 
-		} else if (is_array($native) || is_object($native) && $native instanceof stdClass) {
+		} else if ($native instanceof \DateTime) {
+			$ret = clone JS::$objectTemplate;
+
+      	$ret->prototype = JS::$global->properties['Date']->properties['prototype'];
+      	$ret->class = 'Date';
+      	$ret->value = $native->getTimestamp();
+
+			return $ret;
+
+      } else if (is_array($native) || is_object($native) && $native instanceof stdClass) {
 			$isArray = is_array($native) &&
 				(!count($native) ||
 				range(0, count($native) - 1) === array_keys($native));
@@ -394,6 +403,9 @@ class JS
 			}
 
 			return $array;
+
+		} else if (isset($value->class) && $value->class === 'Date') {
+			return new DateTime('@' . $value->value);
 
 		} else if (isset($value->native)) {
 			return $value->native;

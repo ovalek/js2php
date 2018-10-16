@@ -44,7 +44,7 @@ function Date(year, month, date, hours, minutes, seconds, ms) {
 		seconds = seconds || 0;
 		ms = ms || 0;
 
-		@@ `d->value = mktime(`hours, `minutes, `seconds, `month, `date, `year) + `ms / 1000; @@
+		@@ `d->value = mktime(`hours, `minutes, `seconds, `month + 1, `date, `year) + `ms / 1000; @@
 	}
 
 	return d;
@@ -112,7 +112,7 @@ Date.prototype.getYear = function () {
 Date.prototype.getUTCYear = Date.prototype.getUTCFullYear;
 
 Date.prototype.getMonth = function () {
-	return @@ (int) date('n', $leThis->value) @@;
+	return @@ (int) date('n', $leThis->value) - 1 @@;
 };
 
 Date.prototype.getUTCMonth = Date.prototype.getUTCFullYear;

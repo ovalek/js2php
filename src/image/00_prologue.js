@@ -239,7 +239,16 @@ class JS
 		} else if ($native instanceof JSUndefined) {
 			return JS::$undefined;
 
-		} else if (is_array($native) || is_object($native) && $native instanceof stdClass) {
+		} else if ($native instanceof \DateTime) {
+			$ret = clone JS::$objectTemplate;
+
+      	$ret->prototype = JS::$global->properties['Date']->properties['prototype'];
+      	$ret->class = 'Date';
+      	$ret->value = $native->getTimestamp();
+
+			return $ret;
+
+      } else if (is_array($native) || is_object($native) && $native instanceof stdClass) {
 			$isArray = is_array($native) &&
 				(!count($native) ||
 				range(0, count($native) - 1) === array_keys($native));
@@ -389,6 +398,9 @@ class JS
 			}
 
 			return $array;
+
+		} else if (isset($value->class) && $value->class === 'Date') {
+			return new DateTime('@' . $value->value);
 
 		} else if (isset($value->native)) {
 			return $value->native;
