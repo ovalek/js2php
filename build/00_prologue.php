@@ -1,4 +1,4 @@
-function _75477e6bbd44ef5057780a6cb57f68d6_0($global = NULL, $scope = NULL) {
+function _14231f9936a86b0599a8a1ed10549fa4_0($global = NULL, $scope = NULL) {
 if (!is_object($global)) {$global = (object) array('properties' => array(),'attributes' => array(),'getters' => array(),'setters' => array(),'prototype' => NULL,'up' => NULL,);$set_scope = TRUE;$global->trace = array(array('<image>/00_prologue.js', NULL, NULL)); $global->trace_sp = 0;}
 if ($scope === NULL) {$scope = (object) array('properties' => array(), 'attributes' => array(), 'up' => $global);$scope->properties['global'] = $global;$scope->properties['__filename'] = '<image>/00_prologue.js';$scope->properties['__dirname'] = '<image>';}
 if (isset($global->properties['require'])) {$global->properties['require']->properties['.'] = '<image>';$global->properties['require']->attributes['.'] = 0;}
@@ -228,7 +228,7 @@ class JS
 		} else if (is_string($v)) {
 			$o = clone JS::$stringTemplate;
 			$o->value = $v;
-			$o->properties['length'] = strlen($v);
+			$o->properties['length'] = mb_strlen($v);
 			$o->attributes['length'] = 0;
 			return $o;
 		}

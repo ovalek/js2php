@@ -223,7 +223,7 @@ class JS
 		} else if (is_string($v)) {
 			$o = clone JS::$stringTemplate;
 			$o->value = $v;
-			$o->properties['length'] = strlen($v);
+			$o->properties['length'] = mb_strlen($v);
 			$o->attributes['length'] = 0;
 			return $o;
 		}

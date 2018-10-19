@@ -150,7 +150,8 @@ String.prototype.replace = function (search, replace) {
 		thisString = @@ $leThis->value @@, newString = "", s;
 
 	while ((match = search.exec(thisString)) !== null) {
-		index = match.index;
+		var matchIndex = match.index;
+		index = @@ mb_strlen(mb_strcut(`thisString, 0, `matchIndex)) @@;
 		newString += s = thisString.substring(lastIndex, index);
 		lastIndex = index + match[0].length;
 
@@ -254,19 +255,22 @@ String.prototype.split = function (separator, limit) {
 	}
 
 	while ((match = separator.exec(thisString)) && --limit > 0 && lastIndex < this.length) {
+	   var unicodeLastIndex = @@ mb_strlen(mb_strcut(`thisString, 0, `lastIndex)) @@;
+	   var matchIndex = match.index;
+	   var unicodeMatchIndex = @@ mb_strlen(mb_strcut(`thisString, 0, `matchIndex)) @@;
 		if (match[0] === '' && match.index === lastIndex) {
-			returnArray.push(this.substring(lastIndex, lastIndex + 1));
+			returnArray.push(this.substring(unicodeLastIndex, unicodeLastIndex + 1));
 			++lastIndex;
 			++separator.lastIndex;
 
 		} else {
-			returnArray.push(this.substring(lastIndex, match.index));
+			returnArray.push(this.substring(unicodeLastIndex, unicodeMatchIndex));
 
 			for (var i = 1, l = match.length; i < l; ++i) {
 				returnArray.push(match[i]);
 			}
 
-			lastIndex = match.index + match[0].length;
+			lastIndex = unicodeMatchIndex + match[0].length;
 		}
 	}
 
@@ -278,6 +282,33 @@ String.prototype.split = function (separator, limit) {
 	separator.lastIndex = savedLastIndex;
 
 	return returnArray;
+};
+
+String.prototype.alternativeSubstring = function (start, end) {
+	var length = @@ strlen($leThis->value) @@;
+
+	if (start === undefined) {
+		start = 0;
+	}
+
+	if (end === undefined) {
+		end = length;
+	}
+
+	if (start < 0) {
+		start = Math.max(start + length, 0);
+	}
+
+	if (end < 0) {
+		end = Math.max(end + length, 0);
+	}
+
+	start = Math.min(start, length);
+	end = Math.min(end, length);
+
+	var from = Math.min(start, end), to = Math.max(start, end);
+
+	return @@ (string) substr($leThis->value, `from, `to - `from) @@;
 };
 
 String.prototype.substring = function (start, end) {
@@ -330,4 +361,17 @@ String.prototype.toLocaleUpperCase = String.prototype.toUpperCase;
 
 String.prototype.trim = function () {
 	return @@ trim($leThis->value) @@;
+};
+
+String.prototype.includes = function(search, start) {
+   'use strict';
+   if (typeof start !== 'number') {
+      start = 0;
+   }
+
+   if (start + search.length > this.length) {
+      return false;
+   } else {
+      return this.indexOf(search, start) !== -1;
+   }
 };

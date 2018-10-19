@@ -300,3 +300,13 @@ Object.prototype.isPrototypeOf = function (v) {
 Object.prototype.propertyIsEnumerable = function (p) {
 	return @@ JS::toBoolean(isset($leThis->attributes[`p]) && ($leThis->attributes[`p] & JS::ENUMERABLE), $global) @@;
 };
+
+Object.values = function(obj) {
+    var res = [];
+    for (var i in obj) {
+       if (obj.hasOwnProperty(i)) {
+          res.push(obj[i]);
+       }
+    }
+    return res;
+};
