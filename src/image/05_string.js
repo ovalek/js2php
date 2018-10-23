@@ -227,89 +227,99 @@ String.prototype.slice = function (start, end) {
 };
 
 String.prototype.split = function (separator, limit) {
-	if (separator === undefined) {
-		return [@@ $leThis->value @@];
-	}
+   if (separator === undefined) {
+      return [@@ $leThis->value @@];
+   }
 
-	if (separator === "") {
-		var returnArray = [];
-
-		for (var i = 0, l = this.length; i < l; ++i) {
-			returnArray.push(@@ (string) mb_substr($leThis->value, `i, 1) @@);
-		}
-
-		return returnArray;
-	}
-
-	if (typeof separator === "string") {
-		separator = new RegExp(@@ preg_quote(JS::toString(`separator, $global), '/') @@, 'g');
-	}
-
-	var returnArray = [], match, lastIndex = 0, index, thisString = @@ $leThis->value @@,
-		savedLastIndex = separator.lastIndex, savedGlobal = separator.global;
-
-	@@ `separator->properties['global'] = TRUE; @@
-
-	if (limit === undefined) {
-		limit = Infinity;
-	}
-
-	while ((match = separator.exec(thisString)) && --limit > 0 && lastIndex < this.length) {
-	   var unicodeLastIndex = @@ mb_strlen(mb_strcut(`thisString, 0, `lastIndex)) @@;
-	   var matchIndex = match.index;
-	   var unicodeMatchIndex = @@ mb_strlen(mb_strcut(`thisString, 0, `matchIndex)) @@;
-		if (match[0] === '' && match.index === lastIndex) {
-			returnArray.push(this.substring(unicodeLastIndex, unicodeLastIndex + 1));
-			++lastIndex;
-			++separator.lastIndex;
-
-		} else {
-			returnArray.push(this.substring(unicodeLastIndex, unicodeMatchIndex));
-
-			for (var i = 1, l = match.length; i < l; ++i) {
-				returnArray.push(match[i]);
+   if (typeof separator === "string") {
+      if (separator === "") {
+         var returnArray = [];
+         for (var i = 0, l = Math.min(this.length, limit === undefined ? this.length : limit); i < l; ++i) {
+            returnArray.push(@@ (string) mb_substr($leThis->value, `i, 1) @@);
 			}
-
-			lastIndex = unicodeMatchIndex + match[0].length;
+			return returnArray;
 		}
-	}
+		if (limit === undefined) {
+   		return @@ JS::fromNative(explode(`separator, $leThis->value)) @@;
+         } else {
+            var tmpArray = @@ JS::fromNative(explode(`separator, $leThis->value, `limit + 1)) @@;
+            return tmpArray.slice(0, Math.min(limit, tmpArray.length));
+         }
+      } else {
+         var pattern = "/" + separator.source + "/";
+         if (limit === undefined) {
+            return @@ JS::fromNative(preg_split(`pattern, $leThis->value)) @@;
+		} else {
+         var tmpArray = @@ JS::fromNative(preg_split(`pattern, $leThis->value, `limit + 1)) @@;
+         return tmpArray.slice(0, Math.min(limit, tmpArray.length));
+      }
+   }
+}
 
-	if (lastIndex < this.length) {
-		returnArray.push(this.substring(lastIndex, this.length));
-	}
-
-	@@ `separator->properties['global'] = `savedGlobal; @@
-	separator.lastIndex = savedLastIndex;
-
-	return returnArray;
-};
-
-String.prototype.alternativeSubstring = function (start, end) {
-	var length = @@ strlen($leThis->value) @@;
-
-	if (start === undefined) {
-		start = 0;
-	}
-
-	if (end === undefined) {
-		end = length;
-	}
-
-	if (start < 0) {
-		start = Math.max(start + length, 0);
-	}
-
-	if (end < 0) {
-		end = Math.max(end + length, 0);
-	}
-
-	start = Math.min(start, length);
-	end = Math.min(end, length);
-
-	var from = Math.min(start, end), to = Math.max(start, end);
-
-	return @@ (string) substr($leThis->value, `from, `to - `from) @@;
-};
+// modified original split (problematic multibyte separators)
+// String.prototype.split = function (separator, limit) {
+// 	if (separator === undefined) {
+// 		return [@@ $leThis->value @@];
+// 	}
+//
+// 	if (separator === "") {
+// 		var returnArray = [];
+//
+// 		for (var i = 0, l = Math.min(this.length, limit === undefined ? this.length : limit); i < l; ++i) {
+// 			returnArray.push(@@ (string) mb_substr($leThis->value, `i, 1) @@);
+// 		}
+//
+// 		return returnArray;
+// 	}
+//
+// 	if (typeof separator === "string") {
+// 		separator = new RegExp(@@ preg_quote(JS::toString(`separator, $global), '/') @@, 'g');
+// 	}
+//
+// 	var returnArray = [], match, lastIndex = 0, index, thisString = @@ $leThis->value @@,
+// 		savedLastIndex = separator.lastIndex, savedGlobal = separator.global;
+//
+// 	@@ `separator->properties['global'] = TRUE; @@
+//
+// 	var tmpLimit;
+// 	if (limit === undefined) {
+//       tmpLimit = Infinity;
+// 	} else {
+//       tmpLimit = limit +1;
+//    }
+//
+// 	var unicodeLastIndex;
+//
+// 	while ((match = separator.exec(thisString)) && --tmpLimit > 0 && lastIndex < this.length) {
+// 	   unicodeLastIndex = @@ mb_strlen(mb_strcut(`thisString, 0, `lastIndex)) @@;
+// 	   var matchIndex = match.index;
+// 	   var unicodeMatchIndex = @@ mb_strlen(mb_strcut(`thisString, 0, `matchIndex)) @@;
+// 		if (match[0] === '' && unicodeMatchIndex === unicodeLastIndex) {
+// 			returnArray.push(this.substring(unicodeLastIndex, unicodeLastIndex + 1));
+// 			++lastIndex;
+// 			++separator.lastIndex;
+//
+// 		} else {
+// 			returnArray.push(this.substring(unicodeLastIndex, unicodeMatchIndex));
+//
+// 			for (var i = 1, l = match.length; i < l; ++i) {
+// 				returnArray.push(match[i]);
+// 			}
+//
+// 			lastIndex = match.index + match[0].length;
+// 		}
+// 	}
+//
+// 	unicodeLastIndex = @@ mb_strlen(mb_strcut(`thisString, 0, `lastIndex)) @@;
+// 	if (unicodeLastIndex < this.length) {
+// 		returnArray.push(this.substring(unicodeLastIndex, this.length));
+// 	}
+//
+// 	@@ `separator->properties['global'] = `savedGlobal; @@
+// 	separator.lastIndex = savedLastIndex;
+//
+// 	return returnArray.slice(0, Math.min(returnArray.length, limit === undefined ? Infinity : limit));
+// };
 
 String.prototype.substring = function (start, end) {
 	var length = @@ mb_strlen($leThis->value) @@;
