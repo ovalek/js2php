@@ -1,4 +1,4 @@
-function _14231f9936a86b0599a8a1ed10549fa4_0($global = NULL, $scope = NULL) {
+function _cc6dc3030e2c1f5cb7a2fb6e64598afa_0($global = NULL, $scope = NULL) {
 if (!is_object($global)) {$global = (object) array('properties' => array(),'attributes' => array(),'getters' => array(),'setters' => array(),'prototype' => NULL,'up' => NULL,);$set_scope = TRUE;$global->trace = array(array('<image>/00_prologue.js', NULL, NULL)); $global->trace_sp = 0;}
 if ($scope === NULL) {$scope = (object) array('properties' => array(), 'attributes' => array(), 'up' => $global);$scope->properties['global'] = $global;$scope->properties['__filename'] = '<image>/00_prologue.js';$scope->properties['__dirname'] = '<image>';}
 if (isset($global->properties['require'])) {$global->properties['require']->properties['.'] = '<image>';$global->properties['require']->attributes['.'] = 0;}
@@ -249,7 +249,7 @@ class JS
 
       	$ret->prototype = JS::$global->properties['Date']->properties['prototype'];
       	$ret->class = 'Date';
-      	$ret->value = $native->getTimestamp();
+      	$ret->value = $native->getTimestamp() + $native->getOffset();
 
 			return $ret;
 
