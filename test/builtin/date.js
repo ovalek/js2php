@@ -2,14 +2,14 @@ test("Date()", function () {
 	assert(typeof Date(1992, 9, 21) === "string", "Date(): 1");
 
 	var d1 = new Date(Date.parse("1992-09-21 02:53:03")),
-		d2 = new Date(1992, 9, 21, 2, 53, 3),
+		d2 = new Date(1992, 8, 21, 2, 53, 3),
 		d = d1;
 
 	assert(d1.valueOf() === d2.valueOf());
 
 
 	assert(d.getFullYear() === 1992);
-	assert(d.getMonth() === 9);
+	assert(d.getMonth() === 8);
 	assert(d.getDate() === 21);
 	assert(d.getHours() === 2);
 	assert(d.getMinutes() === 53);

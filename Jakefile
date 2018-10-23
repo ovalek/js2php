@@ -347,7 +347,7 @@ task("build:jake", "build jake util binary",
 	buildDir + "/*.php",
 	__filename,
 	function () {
-		var code = "#!/usr/bin/php\n<?php\n";
+		var code = "#!/usr/bin/php\n<?php\n error_reporting(E_ALL & ~E_NOTICE);\n";
 
 		[ buildDir + "/image.php", buildDir + "/JSInterpreter.php" ].forEach(function (f) {
 			code += PHP.fn("ltrim")(PHP.fn("file_get_contents")(f).substring(5)); // remove <?php
@@ -397,7 +397,7 @@ task("build:jtest", "build jtest util binary",
 	buildDir + "/*.php",
 	__filename,
 	function () {
-		var code = "#!/usr/bin/php\n<?php\n";
+		var code = "#!/usr/bin/php\n<?php\n error_reporting(E_ALL & ~E_NOTICE);\n";
 
 		[ buildDir + "/image.php", buildDir + "/JSInterpreter.php" ].forEach(function (f) {
 			code += PHP.fn("ltrim")(PHP.fn("file_get_contents")(f).substring(5)); // remove <?php
@@ -430,4 +430,26 @@ task("test", "run tests",
 	"build", "build:jtest",
 	function () {
 		run(utilDir + "/jtest " + testDir);
+	});
+
+task("test_lite", "run tests",
+	"build", "build:image_lite", "build:jtest",
+	function () {
+	   var excluded_lite_modules = [
+	      'buffer.js',
+	      'crypto.js',
+	      'fs.js',
+	      'path.js',
+	      'php.js',
+	      'require.js',
+	   ];
+	   var files = [].concat(PHP.fn("glob")(testDir + "/*.js"), PHP.fn("glob")(testDir + "/*/*.js"),
+      				PHP.fn("glob")(testDir + "/*/*/*.js"), PHP.fn("glob")(testDir + "/*/*/*/*.js"));
+	   for (index in files) {
+	      if (excluded_lite_modules.indexOf(PHP.fn("basename")(files[index])) >= 0) {
+	         delete files[index];
+	      }
+	   }
+
+		run(utilDir + "/jtest " + files.join(" "));
 	});

@@ -75,7 +75,7 @@ var parse = PHP.cls("JSParser")(), compile = PHP.cls("JSCompiler")(),
 	files = PHP.fn("is_dir")(args[1])
 		? [].concat(PHP.fn("glob")(args[1] + "/*.js"), PHP.fn("glob")(args[1] + "/*/*.js"),
 				PHP.fn("glob")(args[1] + "/*/*/*.js"), PHP.fn("glob")(args[1] + "/*/*/*/*.js"))
-		: [ args[1] ],
+		: args.slice(1),
 	failedCompile = 0, failedCompiled = 0, failedAssert = 0, passed = 0;
 
 try {
@@ -139,9 +139,9 @@ try {
 	puts();
 	puts(e.name + ": " + e.message + " in " + e.file + "@" + e.line + ":" + e.column);
 	var trace = @@ JS::fromNative($global->trace) @@;
-	trace.reverse().forEach(function (t) {
-		puts("  " + t[0] + (t[1] !== null ? "@" + t[1] + ":" + t[2] : ""));
-	});
+//	trace.reverse().forEach(function (t) {
+//		puts("  " + t[0] + (t[1] !== null ? "@" + t[1] + ":" + t[2] : ""));
+//	});
 	puts();
 
 } finally {

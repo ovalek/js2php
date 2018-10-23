@@ -244,7 +244,7 @@ class JS
 
       	$ret->prototype = JS::$global->properties['Date']->properties['prototype'];
       	$ret->class = 'Date';
-      	$ret->value = $native->getTimestamp();
+      	$ret->value = $native->getTimestamp() + $native->getOffset();
 
 			return $ret;
 
